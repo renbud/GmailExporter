@@ -1,0 +1,16 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+__pycache__/db_utils.cpython-314.pyc
+Notes.md
+config/config.yaml
+
+# Virtual environments
+.venv
+
+token.json
+credentials.json
