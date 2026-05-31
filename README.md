@@ -38,9 +38,7 @@ This ensures chronological sorting and uniqueness.
 Install dependencies:
 
 ```
-uv add google-auth
-uv add google-auth-oauthlib
-uv add google-api-python-client
+ uv sync
 ```
 
 Place your Google OAuth credentials file in the project directory:
@@ -80,7 +78,7 @@ This makes the exporter safe to run daily, hourly, or in cron.
 ## **Running the Exporter**
 
 ```
-python export_gmail.py
+ uv run python main.py
 ```
 
 On first run, it exports your entire mailbox.  
