@@ -12,5 +12,7 @@ config/config.yaml
 # Virtual environments
 .venv
 
+# Private credentials and local configuration files
 token.json
 credentials.json
+pivot.json
