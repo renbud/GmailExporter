@@ -8,4 +8,6 @@ dependencies = [
     "google-api-python-client>=2.197.0",
     "google-auth>=2.53.0",
     "google-auth-oauthlib>=1.4.0",
+    "html2text>=2025.4.15",
+    "pyyaml>=6.0.3",
 ]

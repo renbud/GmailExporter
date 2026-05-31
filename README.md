@@ -8,7 +8,7 @@ Each run exports only *new* emails based on the latest timestamp already present
 ## **Features**
 
 - Exports each email into its own folder  
-- Saves the email body as `email.txt`  
+- Saves the email body as `email.eml`  
 - Saves attachments as separate files  
 - Uses the email’s own **Date** header for naming  
 - Incremental: only exports messages **newer than the latest exported email**  
@@ -21,16 +21,12 @@ Each run exports only *new* emails based on the latest timestamp already present
 
 ```
 gmail_export/
-    2024-11-03_14-22-55__msgid_abc123/
-        email.txt
-        attachment_01.pdf
-        attachment_02.png
-```
-
-Naming format:
-
-```
-YYYY-MM-DD_HH-MM-SS__msgid_<gmail_message_id>
+    YY
+        MM
+            DD_msgid_abc123/
+                email.txt
+                attachment_01.pdf
+                attachment_02.png
 ```
 
 This ensures chronological sorting and uniqueness.
@@ -39,18 +35,12 @@ This ensures chronological sorting and uniqueness.
 
 ## **Installation**
 
-Install dependencies using `uv`:
+Install dependencies:
 
 ```
 uv add google-auth
 uv add google-auth-oauthlib
 uv add google-api-python-client
-```
-
-Or using pip:
-
-```
-pip install google-auth google-auth-oauthlib google-api-python-client
 ```
 
 Place your Google OAuth credentials file in the project directory:
@@ -59,7 +49,7 @@ Place your Google OAuth credentials file in the project directory:
 credentials.json
 ```
 
-The script will generate `token.json` on first run.
+The script will generate `token.json` on first run and pivot.json at the end of the run.
 
 ---
 
@@ -81,6 +71,7 @@ The first time you run the exporter:
 3. It queries Gmail for messages **after that timestamp**  
 4. Only new messages are downloaded  
 5. Next run: only newer messages are exported again
+6. If you want to re-extract all from scratch remove pivot.json
 
 This makes the exporter safe to run daily, hourly, or in cron.
 
@@ -102,7 +93,7 @@ Subsequent runs export only new messages.
 - Python 3.9+  
 - A Google account  
 - Gmail API enabled in Google Cloud Console  
-- `credentials.json` OAuth client file  
+- `credentials.json` OAuth client file  (see how to create it below)
 
 ---
 
@@ -113,7 +104,7 @@ Subsequent runs export only new messages.
 - Only `text/plain` parts are written to `email.txt`  
 - HTML export can be added if needed  
 
-### Client secrets First Time
+### Credentials.json First Time
 1. Go to Google Cloud Console
 Open:
 
@@ -123,15 +114,13 @@ https://console.cloud.google.com/apis/credentials (console.cloud.google.com in B
 Click Create Credentials
 
 Choose OAuth client ID
-
 Application type: Desktop app
-
 Download the JSON file
-
 Google will give you a file named something like:
-
+```
 Code
 client_secret_1234567890abcdef.json
+```
 3. Rename it to exactly:
 Code
 credentials.json
