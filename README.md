@@ -1,127 +1,89 @@
-# **GmailExporter – Incremental Gmail to Plain‑Text Exporter**
+# GmailExporter – Incremental Gmail to Plain-Text Exporter
+* Uses Google API
+* Authenticates with registered Google OAuth credentials
+* Exports all labels from Gmail
+* Creates a .eml file for each email in a folder structure that follows Gmail
+* Saves both text and HTML versions of emails
+* Saves attachments as separate files
+* Handles incremental exports using pivot.json to track the latest exported message
 
-GmailExporter is a Python tool that exports your Gmail messages into **plain‑text files**, with **attachments saved separately**, using a **safe incremental workflow**.  
-Each run exports only *new* emails based on the latest timestamp already present in the export folder.
+## Requirements
 
----
+- Python 3.9+
+- A Google account
+- Gmail API enabled in Google Cloud Console
+- credentials.json OAuth client file (see how to create it below)
 
-## **Features**
-
-- Exports each email into its own folder  
-- Saves the email body as `email.eml`  
-- Saves attachments as separate files  
-- Uses the email’s own **Date** header for naming  
-- Incremental: only exports messages **newer than the latest exported email**  
-- Restart‑safe and scalable to tens of thousands of messages  
-- Uses the official Gmail API (fast, reliable, structured)
-
----
-
-## **Folder Structure**
+## Folder Structure
 
 ```
 gmail_export/
     YY
         MM
             DD_msgid_abc123/
-                email.txt
+                email.eml
                 attachment_01.pdf
                 attachment_02.png
 ```
 
 This ensures chronological sorting and uniqueness.
 
----
-
-## **Installation**
+## Installation
 
 Install dependencies:
 
-```
- uv sync
-```
-
-Place your Google OAuth credentials file in the project directory:
-
-```
-credentials.json
+```bash
+uv sync
 ```
 
-The script will generate `token.json` on first run and pivot.json at the end of the run.
+## Configure
 
----
-
-## **Authentication**
-
-The first time you run the exporter:
-
-1. A browser window opens  
-2. Log in with your Google account  
-3. Approve Gmail read‑only access  
-4. A `token.json` file is created for future runs  
-
----
-
-## **How Incremental Export Works**
-
-1. The exporter scans the `gmail_export/` folder  
-2. It finds the **latest timestamp** from previously exported emails  
-3. It queries Gmail for messages **after that timestamp**  
-4. Only new messages are downloaded  
-5. Next run: only newer messages are exported again
-6. If you want to re-extract all from scratch remove pivot.json
-
-This makes the exporter safe to run daily, hourly, or in cron.
-
----
-
-## **Running the Exporter**
-
-```
- uv run python main.py
-```
-
-On first run, it exports your entire mailbox.  
-Subsequent runs export only new messages.
-
----
-
-## **Requirements**
-
-- Python 3.9+  
-- A Google account  
-- Gmail API enabled in Google Cloud Console  
-- `credentials.json` OAuth client file  (see how to create it below)
-
----
-
-## **Notes**
-
-- The exporter uses Gmail’s `after:<unix_timestamp>` search query for speed  
-- Attachments are saved exactly as provided by Gmail  
-- Only `text/plain` parts are written to `email.txt`  
-- HTML export can be added if needed  
-
+1. Copy `config/config.yaml.template` to `config/config.yaml`
+2. Edit `config/config.yaml`:
+   - Set `export_root:` to your desired folder path
+   - Set `gmail_user:` to your Gmail account name
+3. Place `credentials.json` in the project root directory
 ### Credentials.json First Time
-1. Go to Google Cloud Console
-Open:
 
-https://console.cloud.google.com/apis/credentials (console.cloud.google.com in Bing)
+1. Go to Google Cloud Console
+Open: https://console.cloud.google.com/apis/credentials (console.cloud.google.com in Bing)
 
 2. Create OAuth Client Credentials
 Click Create Credentials
 
-Choose OAuth client ID
+3. Choose OAuth client ID
 Application type: Desktop app
 Download the JSON file
 Google will give you a file named something like:
-```
-Code
+
+```json
 client_secret_1234567890abcdef.json
 ```
-3. Rename it to exactly:
-Code
-credentials.json
-4. Place it here:
-Code
-D:\GmailExporter\credentials.json
+
+4. Rename it to exactly `credentials.json` and move to the app folder
+
+## Running the Exporter
+
+```bash
+uv run python main.py
+```
+
+## Authentication
+
+The first time you run the exporter:
+
+1. A browser window opens
+2. Log in with your Google account
+3. Approve Gmail read-only access
+4. A token.json file is created for future runs
+
+## How Incremental Export Works
+On first run, it exports your entire mailbox and creates pivot.json.
+Subsequent runs export only new messages based on the timestamp in pivot.json.
+
+1. The exporter reads pivot.json to find the timestamp of the most recent exported file.
+2. It queries Gmail for messages after that timestamp
+3. At the end of the run the timestamp of the most recent message is saved in pivot.json
+4. If you want to re-extract all from scratch remove pivot.json
+
+This makes the exporter safe to run daily, hourly, or in cron.

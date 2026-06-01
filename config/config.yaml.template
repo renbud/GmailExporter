@@ -1,0 +1,5 @@
+# Copy this file to config/config.yaml and customize it for your setup
+
+export_root: C:\\GmailExportedFiles  # Root folder for exported emails
+gmail_user: your_gmail_user@gmail.com
+
