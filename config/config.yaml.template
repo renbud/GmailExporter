@@ -2,4 +2,13 @@
 
 export_root: C:\\GmailExportedFiles  # Root folder for exported emails
 gmail_user: your_gmail_user@gmail.com
-
+filters:
+  include_categories: []
+  exclude_categories:
+    - spam
+    - promotions
+    - social
+    - updates
+    - forums
+  include_labels: []
+  exclude_labels: []

@@ -48,14 +48,14 @@ def gmail_get_with_retry(service, msg_id: str, gmail_user: str, max_retries=7):
         except (ConnectionResetError, OSError) as e:
             # Network-level failure
             wait = 2 ** attempt + random.random()
-            print(f"Network error on message {msg_id}: {e}. Retrying in {wait:.1f}s")
+            logging.debug(f"Network error on message {msg_id}: {e}. Retrying in {wait:.1f}s")
             time.sleep(wait)
 
         except HttpError as e:
             # Gmail throttling or backend hiccup
             if e.resp.status in (429, 500, 502, 503, 504):
                 wait = 2 ** attempt + random.random()
-                print(f"HTTP {e.resp.status} on message {msg_id}. Retrying in {wait:.1f}s")
+                logging.debug(f"HTTP {e.resp.status} on message {msg_id}. Retrying in {wait:.1f}s")
                 time.sleep(wait)
             else:
                 raise  # real error, not retryable
@@ -106,7 +106,7 @@ def save_email(service, msg_id: str, export_root: str, gmail_user: str) -> datet
                     f.write(part.get_payload(decode=True))
                     os.utime(filepath, (epoch, epoch))
                 except Exception as e:
-                    print(f"Error occurred while writing attachment {filename}: {e}")
+                    logging.error(f"Error occurred while writing attachment {filename}: {e}")
 
         elif content_type == "text/plain":
             body_text.append(part.get_payload(decode=True).decode(errors="ignore"))

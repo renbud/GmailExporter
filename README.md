@@ -1,11 +1,12 @@
-# GmailExporter – Incremental Gmail to Plain-Text Exporter
+# GmailExporter – Incremental Gmail to EML Files Exporter
 * Uses Google API
 * Authenticates with registered Google OAuth credentials
 * Exports all labels from Gmail
-* Creates a .eml file for each email in a folder structure that follows Gmail
-* Saves both text and HTML versions of emails
+* Saves both text and HTML versions of emails in an .eml file
 * Saves attachments as separate files
+* Files are back-dated to the time of the email
 * Handles incremental exports using pivot.json to track the latest exported message
+* Can be used as an archive or input to an indexing system
 
 ## Requirements
 
