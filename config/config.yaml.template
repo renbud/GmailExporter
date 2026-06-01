@@ -2,6 +2,8 @@
 
 export_root: C:\\GmailExportedFiles  # Root folder for exported emails
 gmail_user: your_gmail_user@gmail.com
+log_level: INFO  # Options: DEBUG, INFO, WARNING, ERROR
+
 filters:
   include_categories: []
   exclude_categories:
