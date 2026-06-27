@@ -101,6 +101,8 @@ def save_email(service, msg_id: str, export_root: str, gmail_user: str) -> datet
         if filename:  # Attachment
             filename = clean_filename(filename)
             filepath = os.path.join(folder_path, filename)
+            # TODO send the filecontents to converters to extract markdown
+            # TODO and append markdown to main output md
             with open(filepath, "wb") as f:
                 try:
                     f.write(part.get_payload(decode=True))
@@ -118,6 +120,8 @@ def save_email(service, msg_id: str, export_root: str, gmail_user: str) -> datet
             body_text.append(text)
 
     # Write .eml-like file
+    # TODO: Change this to markdown and add the markdown from the attachments
+    # TODO: Use email-{safe_name(hdr_subject)}.md as filename
     eml_path = os.path.join(folder_path, "email.eml")
     with open(eml_path, "w", encoding="utf-8") as f:
         f.write(f"From: {hdr_from}\n")
